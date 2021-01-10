@@ -25,6 +25,31 @@ return_code = {
 }
 
 
+def TimeDate():
+	dateandtime = datetime.now()
+	date_time = dateandtime.strftime('%Y-%m-%d %H:%M:%S')
+	
+	return str(date_time)
+
+
+# Write log message to specified log file
+def WriteMasterLog(logmessage):
+	try:
+		with open(masterlogfile, 'a+') as log:
+			log.write(TimeDate() + ': ' + str(logmessage) + '\n')
+	except:
+		print(col.red1 + 'Error: Cant write to log' + col.normal)
+
+
+# Write log message to specified log file
+def WriteClientLog(client, logmessage):
+	try:
+		with open(clientloglocation + client + '.log', 'a+') as log:
+			log.write(TimeDate() + ': ' + str(logmessage) + '\n')
+	except:
+		print(col.red1 + 'Error: Cant write to log' + col.normal)
+
+
 ## Clear screen
 def ClearScreen():
 	curses.setupterm() 
@@ -44,9 +69,11 @@ def CheckClient(address):
 		if result == 0:
 		
 			return True
+	
 		else:
 		
 			return False
+	
 	except:
 		print(col.red1 + 'Error: Cant do host lookup @' + str(host) + '. No entry in hosts file?' + col.normal)
 
@@ -80,6 +107,7 @@ def CollectFiles(path):
 				files.append(os.path.join(r, file))
 
 		return files
+	
 	else:
 		print(col.red1('Error: Cant collect groups and recipes from specified directory'))
 	
@@ -102,6 +130,7 @@ def ReadFile(file):
 				content.append(CleanString(row))
 
 		return content
+	
 	except:
 		print(col.red1 + 'Error: Cant open file ' + str(file) + col.normal)
 
@@ -121,15 +150,6 @@ def TimeDate():
 	return str(date_time)
 
 
-# Write log message to specified log file
-def WriteToLog(logfile, logmessage):
-	try:
-		with open(logfile, 'a') as log:
-			log.write(TimeDate() + ': ' + str(logmessage) + '\n')
-	except:
-		print(col.red1 + 'Error: Cant write to log' + col.normal)
-
-
 ## Executes the command on client
 def SshExecute(host, user, passwd, string):
 	command = ['sh', '-c']
@@ -139,27 +159,28 @@ def SshExecute(host, user, passwd, string):
 		shell = spur.SshShell(hostname=host, username=user, password=passwd, missing_host_key=spur.ssh.MissingHostKey.accept)
 	else:
 		shell = spur.SshShell(hostname=host, username=user, password=passwd)
-	try:
-		with shell:
-			result = shell.run(command, allow_error=True)
-			#command = str(command).replace(command_delimiter, ' ')
-			command = ', '.join(command)
-			command = command.replace('sh, -c, ','')
-		
-		if command_output == True:
-			print('Executing command: ' + col.steelblue1 + command + col.normal + ' with result:')
-		
-		if exec_output == True:
-			if CleanString(str(result.output, 'utf-8')) != '' and CleanString(str(result.output, 'utf-8')) != '\n':
-				print(CleanString(str(result.output, 'utf-8')))
-		
-		if return_code_output == True:
-			print('Execution ' + FormatReturnCode(str(result.to_error())))
-			passwd = ''
+	#try:
+	with shell:
+		result = shell.run(command, allow_error=True)
+		#command = str(command).replace(command_delimiter, ' ')
+		command = ', '.join(command)
+		command = command.replace('sh, -c, ','')
 	
-	except:
-		print(col.red1 + 'Error: Cant connect to client  ' + host + col.normal)		
+	if command_output == True:
+		print('Executing command: ' + col.steelblue1 + command + col.normal + ' with result:')
+		WriteClientLog(host, 'Executing command: ' + command + ' with result:')
+		
+	if exec_output == True:
+		if CleanString(str(result.output, 'utf-8')) != '' and CleanString(str(result.output, 'utf-8')) != '\n':
+			print(CleanString(str(result.output, 'utf-8')))
+	
+	if return_code_output == True:
+		print('Execution ' + FormatReturnCode(str(result.to_error())))
 		passwd = ''
+	
+	#except:
+	#	print(col.red1 + 'Error: Cant connect to client  ' + host + col.normal)		
+	#	passwd = ''
 
 
 ## Executes the command locally

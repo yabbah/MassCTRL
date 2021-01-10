@@ -16,12 +16,12 @@ def ReadArguments():
 	recipe = [arg for arg in sys.argv if 'recipe=' in arg]
 
 	if group != [] and recipe != []:
-		group = ''.join(char for char in group if not char in bad_chars)
-		group = str(group).split('=')
+		group = ''.join(char for char in group)
+		group = group.split('=')
 		group = group[1]
 	
-		recipe = ''.join(char for char in recipe if not char in bad_chars)
-		recipe = str(recipe).split('=')
+		recipe = ''.join(char for char in recipe)
+		recipe = recipe.split('=')
 		recipe = recipe[1]
 		return group, recipe
 
@@ -31,7 +31,7 @@ def ReadArguments():
 
 	else:
 		print(col.red2('Not enough parameters passed to MassCTRL.py. Needs both group and recipe.'))    
-		quit()
+		sys.exit(1)
 
 
 def main():

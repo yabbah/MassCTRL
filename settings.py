@@ -7,8 +7,11 @@ groupfiles = './groups/'
 # Location of recipe files
 recipefiles = './recipes/'
 
-# Location of log file"
-log_file = './MassCTRL.log'
+# Location of master log file
+masterlogfile = './MassCTRL.log'
+
+# Location (directory) of client log files
+clientloglocation = './client_logs/'
 
 # Location of key file
 keyfile = '/home/humanizer/MassCTRL/keys.dat'
