@@ -506,6 +506,27 @@ def FileOperation(host, user, passwd, source, dest, direction):
 		if get_file_rename == True and direction == 'get' and os.path.exists(dest + filename):
 			shutil.move(dest + filename, dest + host + '_' + filename)
 	
+		if write_master_log == True:
+			WriteMasterLog(host + ': ' + direction + ' ' + source + ' -> ' + dest)
+
+			if CleanString(str(result.output, 'utf-8')) != '' and CleanString(str(result.output, 'utf-8')) != '\n':
+				WriteMasterLog(host + ': ' + CleanString(str(result.output, 'utf-8')))
+
+			WriteMasterLog(host + ': ' + 'Execution ' + FormatReturnCodeLog(str(result.to_error())))
+		if write_client_log == True:
+			WriteClientLog(host, direction + ' ' + source + ' -> ' + dest)
+
+			if CleanString(str(result.output, 'utf-8')) != '' and CleanString(str(result.output, 'utf-8')) != '\n':
+				WriteClientLog(host, CleanString(str(result.output, 'utf-8')))
+
+			WriteClientLog(host, 'Execution ' + FormatReturnCodeLog(str(result.to_error())))
 	except:
-		print(col.red1 + 'Error: I probably couldnt find the requested file @' + host + col.normal)		
 		passwd = ''
+		print(col.red1 + 'Error: I probably couldnt find the requested file @' + host + col.normal)		
+		
+		if write_master_log == True:
+			WriteMasterLog(host + ': Error: I probably couldnt find the requested file @' + host)
+		
+		if write_client_log == True:		
+			WriteClientLog(host, 'Error: I probably couldnt find the requested file @' + host)
+	
