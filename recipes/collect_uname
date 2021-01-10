@@ -1,0 +1,3 @@
+EXEC:uname -a
+EXEC:df -h | grep sda
+EXEC:echo Humanizer was @ $HOSTNAME
