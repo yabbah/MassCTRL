@@ -1,1 +1,0 @@
-EXEC:printf "SSHD "&&rc-service sshd status

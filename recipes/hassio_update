@@ -1,3 +1,0 @@
-EXEC:ha supervisor update
-EXEC:ha core update
-EXEC:ha os update

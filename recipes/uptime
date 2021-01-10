@@ -1,4 +1,0 @@
-EXEC:uptime
-EXEC:mkdir /home/humanizer/temp
-PUT:/home/humanizer/kaka.sh /home/humanizer/temp/
-GET:/etc/hosts /home/humanizer/temp/

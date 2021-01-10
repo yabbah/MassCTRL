@@ -1,6 +1,0 @@
-EXEC:uname -a
-EXEC:cat /etc/os-release | grep NAME
-EXEC:cat /proc/cpuinfo | grep -m 1 "model name"
-EXEC:cat /proc/meminfo | grep MemTotal
-EXEC:cat /proc/meminfo | grep MemAvail
-EXEC:df -h | grep sda

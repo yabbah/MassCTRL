@@ -1,7 +1,0 @@
-proxmox02 192.168.1.19
-fileserver01 192.168.1.47
-slashbox02 192.168.1.128
-ansibleserver01 192.168.1.201
-plexserver01 192.168.1.11
-unificontroller01 192.168.1.210
-hassio 192.168.1.2
