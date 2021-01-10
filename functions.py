@@ -217,6 +217,7 @@ def LocalExecute(string):
 	try:
 		with shell:
 			result = shell.run(command, allow_error=True)
+			
 			command = ', '.join(command)
 			command = command.replace('sh, -c, ','')
 		
@@ -237,17 +238,17 @@ def LocalExecute(string):
 			WriteMasterLog('Execution ' + FormatReturnCodeLog(str(result.to_error())))
 		
 		if write_client_log == True:
-			WriteClientLog(host, 'local', 'Executing local command: ' + command + ' with result:')
+			WriteClientLog('local', 'Executing local command: ' + command + ' with result:')
 			if CleanString(str(result.output, 'utf-8')) != '' and CleanString(str(result.output, 'utf-8')) != '\n':
-				WriteClientLog(host, CleanString(str(result.output, 'utf-8')))
-			WriteClientLog(host, 'Execution ' + FormatReturnCodeLog(str(result.to_error())))
+				WriteClientLog('local', CleanString(str(result.output, 'utf-8')))
+			WriteClientLog('local', 'Execution ' + FormatReturnCodeLog(str(result.to_error())))
 	except:
 		print(col.red1 + 'Error: Cant execute command' + col.normal)		
 
 		if write_master_log == True:
-			WriteMasterLog(host, 'local: Error: Cant connect to client  ' + host)
+			WriteMasterLog('local: Error: Cant execute command')
 		if write_client_log == True:
-			WriteClientLog(host, 'Error: Cant connect to client  ' + host)
+			WriteClientLog('local', 'Error: Cant execute command')
 
 ## Main function for executing remote commands
 def exec_command(group, recipe):
@@ -529,4 +530,3 @@ def FileOperation(host, user, passwd, source, dest, direction):
 		
 		if write_client_log == True:		
 			WriteClientLog(host, 'Error: I probably couldnt find the requested file @' + host)
-	
