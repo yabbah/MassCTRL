@@ -49,7 +49,7 @@ def WriteClientLog(client, logmessage):
 	except:
 		print(col.red1 + 'Error: Cant write to log' + col.normal)
 
-
+ 
 ## Clear screen
 def ClearScreen():
 	curses.setupterm() 
@@ -76,6 +76,12 @@ def CheckClient(address):
 	
 	except:
 		print(col.red1 + 'Error: Cant do host lookup @' + str(host) + '. No entry in hosts file?' + col.normal)
+		if write_master_log == True:
+			WriteMasterLog(str(host) + ': Error: Cant do host lookup @' + str(host) + '. No entry in hosts file?')
+
+		if write_client_log == True:
+			WriteClientLog(str(host), 'Error: Cant do host lookup @' + str(host) + '. No entry in hosts file?')
+
 
 def ClientStatus(group):
 	clients = GetClients(group)
@@ -110,6 +116,9 @@ def CollectFiles(path):
 	
 	else:
 		print(col.red1('Error: Cant collect groups and recipes from specified directory'))
+
+		if write_master_log == True:
+			WriteMasterLog('Error: Cant collect groups and recipes from specified directory')
 	
 
 ## String cleanup
@@ -133,6 +142,10 @@ def ReadFile(file):
 	
 	except:
 		print(col.red1 + 'Error: Cant open file ' + str(file) + col.normal)
+		
+		if write_master_log == True:
+			WriteMasterLog('Error: Cant open file ' + str(file))
+
 
 
 ## Get the working directory of MassCTRL ## UNUSED ##
@@ -159,29 +172,41 @@ def SshExecute(host, user, passwd, string):
 		shell = spur.SshShell(hostname=host, username=user, password=passwd, missing_host_key=spur.ssh.MissingHostKey.accept)
 	else:
 		shell = spur.SshShell(hostname=host, username=user, password=passwd)
-	#try:
-	with shell:
-		result = shell.run(command, allow_error=True)
-		#command = str(command).replace(command_delimiter, ' ')
-		command = ', '.join(command)
-		command = command.replace('sh, -c, ','')
-	
-	if command_output == True:
-		print('Executing command: ' + col.steelblue1 + command + col.normal + ' with result:')
-		WriteClientLog(host, 'Executing command: ' + command + ' with result:')
+	try:
+		with shell:
+			result = shell.run(command, allow_error=True)
+			#command = str(command).replace(command_delimiter, ' ')
+			command = ', '.join(command)
+			command = command.replace('sh, -c, ','')
 		
-	if exec_output == True:
-		if CleanString(str(result.output, 'utf-8')) != '' and CleanString(str(result.output, 'utf-8')) != '\n':
-			print(CleanString(str(result.output, 'utf-8')))
+		if command_output == True:
+			print('Executing command: ' + col.steelblue1 + command + col.normal + ' with result:')
+					
+		if exec_output == True:
+			if CleanString(str(result.output, 'utf-8')) != '' and CleanString(str(result.output, 'utf-8')) != '\n':
+				print(CleanString(str(result.output, 'utf-8')))
+		
+		if return_code_output == True:
+			print('Execution ' + FormatReturnCode(str(result.to_error())))
+			passwd = ''
+		
+		if write_master_log == True:
+			WriteMasterLog(host + ': Executing command: ' + command + ' with result:')
+			WriteMasterLog(host + ': ' + CleanString(str(result.output, 'utf-8')))
+			WriteMasterLog(host + ': Execution ' + FormatReturnCodeLog(str(result.to_error())))
+		if write_client_log == True: 
+			WriteClientLog(host, 'Executing command: ' + command + ' with result:')
+			WriteClientLog(host, CleanString(str(result.output, 'utf-8')))
+			WriteClientLog(host, 'Execution ' + FormatReturnCodeLog(str(result.to_error())))
 	
-	if return_code_output == True:
-		print('Execution ' + FormatReturnCode(str(result.to_error())))
+	except:
 		passwd = ''
-	
-	#except:
-	#	print(col.red1 + 'Error: Cant connect to client  ' + host + col.normal)		
-	#	passwd = ''
-
+		print(col.red1 + 'Error: Cant connect to client  ' + host + col.normal)		
+		
+		if write_master_log == True:
+			WriteMasterLog(host + ': Error: Cant connect to client  ' + host)
+		if write_client_log == True:
+			WriteClientLog('Error: Cant connect to client  ' + host)
 
 ## Executes the command locally
 def LocalExecute(string):
@@ -205,9 +230,24 @@ def LocalExecute(string):
 		if return_code_output == True:
 			print('Execution ' + FormatReturnCode(str(result.to_error())))
 	
+		if write_master_log == True:
+			WriteMasterLog('Executing local command: ' + command + ' with result:')
+			if CleanString(str(result.output, 'utf-8')) != '' and CleanString(str(result.output, 'utf-8')) != '\n':
+				WriteMasterLog(CleanString(str(result.output, 'utf-8')))
+			WriteMasterLog('Execution ' + FormatReturnCodeLog(str(result.to_error())))
+		
+		if write_client_log == True:
+			WriteClientLog(host, 'local', 'Executing local command: ' + command + ' with result:')
+			if CleanString(str(result.output, 'utf-8')) != '' and CleanString(str(result.output, 'utf-8')) != '\n':
+				WriteClientLog(host, CleanString(str(result.output, 'utf-8')))
+			WriteClientLog(host, 'Execution ' + FormatReturnCodeLog(str(result.to_error())))
 	except:
 		print(col.red1 + 'Error: Cant execute command' + col.normal)		
 
+		if write_master_log == True:
+			WriteMasterLog(host, 'local: Error: Cant connect to client  ' + host)
+		if write_client_log == True:
+			WriteClientLog(host, 'Error: Cant connect to client  ' + host)
 
 ## Main function for executing remote commands
 def exec_command(group, recipe):
@@ -220,7 +260,7 @@ def exec_command(group, recipe):
 		for client in clients:
 			if client_headline == True:
 				print(col.bold_yellow1(client) + '\n' + (col.darkgray('=') * len(client)))
-			
+
 			if CheckClient(client) == True:
 				user, passwd = GetCredentials(client)
 				
@@ -264,9 +304,19 @@ def exec_command(group, recipe):
 				passwd = ''
 				print(col.red1 + 'Client: ' + str(client) + ' does not respond' + col.normal)
 				print('-' * 30)
+
+				if write_master_log == True:
+					WriteMasterLog(str(client) + ': Client: ' + str(client) + ' does not respond')
+				if write_client_log == True:
+					WriteClientLog(str(client), 'Client: ' + str(client) + ' does not respond')
 			print('')
 	else:
 		print(col.red1 + 'Error: The recipe file has no ingredients' + col.normal)
+
+		if write_master_log == True:
+			WriteMasterLog(str(client) + ': Error: The recipe file has no ingredients')
+		if write_client_log == True:
+			WriteClientLog(str(client), + 'Error: The recipe file has no ingredients')
 
 
 ## Format the return code of executed command
@@ -280,6 +330,18 @@ def FormatReturnCode(returncode):
 		return (returncode + ' - ' + col.green2 + rc_message + col.normal)
 	else:
 		return (returncode + ' - ' + col.red1 + rc_message + col.normal)
+
+
+def FormatReturnCodeLog(returncode):
+	returncode = returncode.split('\n')
+	returncode = str(returncode[0])
+	returnnum = str(returncode).split(' ')
+	rc_message = return_code.get(str(returnnum[2]))
+
+	if str(returnnum[2]) == '0':
+		return (returncode + ' - ' + rc_message)
+	else:
+		return (returncode + ' - ' + rc_message)
 
 
 ## Get login credentials from key file.
@@ -350,7 +412,11 @@ def GetRecipe(recipe):
 						ingredients.append(command)
 
 					else:
-						print(col.red1 + 'The recipe file is invalid and does not contain mandatory trigger commands' + col.normal)
+						print(col.red1 + 'The recipe file ' + recipe + ' is invalid and does not contain mandatory trigger commands' + col.normal)
+						
+						if write_master_log == True:
+							WriteMasterLog('The recipe file ' + recipe + ' is invalid and does not contain mandatory trigger commands')
+
 						sys.exit(1)
 				
 				else:
@@ -358,6 +424,10 @@ def GetRecipe(recipe):
 		
 		else:
 			print(col.red1 + 'The recipe ' + recipe + ' does not exist' + col.normal)
+			
+			if write_master_log == True:
+				WriteMasterLog('The recipe ' + recipe + ' does not exist')
+
 			sys.exit(1)
 	
 	return ingredients

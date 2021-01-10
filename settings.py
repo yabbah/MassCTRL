@@ -47,10 +47,10 @@ command_delimiter = '^'
 ticker_intervall = 10
 
 # Write output to one log file
-write_master_log = False
+write_master_log = True
 
 # Write to individual log files per client
-write_client_log = False
+write_client_log = True
 
 # Renames recieved files with destination hostname in the beginnig of filename
 # Must be True on multi host operations
