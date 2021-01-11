@@ -9,11 +9,11 @@ import curses
 import sys
 import time
 import shutil
+import random
 
 
 # https://blessed.readthedocs.io/en/latest/colors.html
 col = Terminal()
-
 
 return_code = {
 	'0': 'Success',
@@ -192,11 +192,17 @@ def SshExecute(host, user, passwd, string):
 		
 		if write_master_log == True:
 			WriteMasterLog(host + ': Executing command: ' + command + ' with result:')
-			WriteMasterLog(host + ': ' + CleanString(str(result.output, 'utf-8')))
+			
+			if CleanString(str(result.output, 'utf-8')) != '' and CleanString(str(result.output, 'utf-8')) != '\n':
+				WriteMasterLog(host + ': ' + CleanString(str(result.output, 'utf-8')))
+			
 			WriteMasterLog(host + ': Execution ' + FormatReturnCodeLog(str(result.to_error())))
 		if write_client_log == True: 
 			WriteClientLog(host, 'Executing command: ' + command + ' with result:')
-			WriteClientLog(host, CleanString(str(result.output, 'utf-8')))
+			
+			if CleanString(str(result.output, 'utf-8')) != '' and CleanString(str(result.output, 'utf-8')) != '\n':
+				WriteClientLog(host, CleanString(str(result.output, 'utf-8')))
+
 			WriteClientLog(host, 'Execution ' + FormatReturnCodeLog(str(result.to_error())))
 	
 	except:

@@ -16,6 +16,9 @@ clientloglocation = './client_logs/'
 # Location of key file
 keyfile = '/home/humanizer/MassCTRL/keys.dat'
 
+#Cipher key file
+cipfile ='/home/humanizer/MassCTRL/cip.dat'
+
 # Use a master account for all client connections
 master_account = False
 

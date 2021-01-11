@@ -29,6 +29,10 @@ def ReadArguments():
 		fn.InventoryList()
 		sys.exit(0)
 
+	elif sys.argv[1] == 'test':
+		pass
+		sys.exit(0)
+	
 	else:
 		print(col.red2('Not enough parameters passed to MassCTRL.py. Needs both group and recipe.'))    
 		sys.exit(1)
@@ -38,8 +42,10 @@ def main():
 	group, recipe =	ReadArguments()
 	if recipe == 'status':
 		fn.ClientStatusTicker(group)
+	
 	elif recipe == 'list':
 		fn.InventoryList()
+	
 	else:
 		fn.exec_command(group, recipe)
 
