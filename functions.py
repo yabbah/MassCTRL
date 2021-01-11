@@ -222,7 +222,7 @@ def LocalExecute(string):
 			command = command.replace('sh, -c, ','')
 		
 		if command_output == True:
-			print('Executing local command: ' + col.steelblue1 + command + col.normal + ' with result:')
+			print('Executing local command: ' + col.tan1 + command + col.normal + ' with result:')
 		
 		if exec_output == True:
 			if CleanString(str(result.output, 'utf-8')) != '' and CleanString(str(result.output, 'utf-8')) != '\n':
@@ -294,7 +294,7 @@ def exec_command(group, recipe):
 							FileOperation(client, user, passwd, source, dest, 'get')	
 	
 					print('-' * 30)
-					print('')
+					#print('')
 					passwd = ''
 					
 				except Exception as error:
