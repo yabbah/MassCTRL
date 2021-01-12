@@ -4,9 +4,10 @@
 from settings import *
 from blessed import Terminal
 import functions as fn
+import os
 import subprocess
 import sys
-
+import pathlib
 
 bad_chars = ["'", ",", "[", "]"]
 col = Terminal()
@@ -39,6 +40,7 @@ def ReadArguments():
 
 
 def main():
+	os.chdir(pathlib.Path(__file__).parent.absolute())
 	group, recipe =	ReadArguments()
 	if recipe == 'status':
 		fn.ClientStatusTicker(group)

@@ -170,6 +170,10 @@ def SshExecute(host, user, passwd, string):
 	command.extend(string)
 	if missing_host_key_accept == True:
 		shell = spur.SshShell(hostname=host, username=user, password=passwd, missing_host_key=spur.ssh.MissingHostKey.accept)
+	
+	elif private_key_login == True:
+		shell = spur.SshShell(hostname=host, username=user)
+
 	else:
 		shell = spur.SshShell(hostname=host, username=user, password=passwd)
 	try:
