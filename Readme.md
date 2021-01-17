@@ -1,4 +1,4 @@
-#MassCTRL
+# MassCTRL
 
 
 
@@ -9,7 +9,7 @@ MassCTRL uses so called group files and recepie files. A recipe can contain one 
 Execution of MassCTRL requires two inputs, group and recipe. Example:  
 **py MassCTRL.py group=allservers recipe=status**
 
-###Group file and syntax:
+### Group file and syntax:
 
 Each group file contains one or more clients to build the specific group. The syntax of the group file is simple and as follows. Clientname IP-address Ex:
 
@@ -24,7 +24,7 @@ Space is the delimiter when reading files and all words in all files are separat
 The option of exluding a client is supported by putting a ' # ' as the first character of the line.
 
 
-###Recipe file and syntax:
+### Recipe file and syntax:
 Each ingredient in a recipe starts with a command followed by a ' : '. Valid commands are:  
 **EXEC** - Executes remote command  
 **LOCAL** - Executes local command  
@@ -48,7 +48,7 @@ EXEC:rm /tmp/lab/some_script.py
 **Line 5** executes the uploaded script 'some_script.py' from the driectory /tmp  
 **Line 6** removes the executed script  
 
-###Built-in recipes:  
+### Built-in recipes:  
 **list** - lists all groups and recipes in your system.  
 Example: py MassCTRL.py group=clab recipe=list  
 Or directly: py MassCTRL.py list  
@@ -58,7 +58,7 @@ Status is monitoring the specified group continous until stopped.
 Example: py massCTRL.py group=clab recipe=status  
 
 
-###Key file
+### Key file
 
 > **_ATTENTION!_** **Always remember to set your key file permissions to only read/writable for the user that will execute MassCTRL!** Command: chmod 600 keyfile.dat  
 
@@ -94,13 +94,13 @@ clab-pc02 0.0.0.0 superuser -
 clab-pc03 0.0.0.0 chayene -  
 clab-pc04 0.0.0.0 admin -
 
-###Log files
+### Log files
 There are two options to log operation. Log options can be defined in the settings file and are named  write_master_log and write_client_log. Both options take True or False. You can write both typ of logs simultaneously. write_master_log option logs all operation to one file. write_client_log option logs all operation to a specific file per client.
 
-###Settings file
+### Settings file
 The settings file are pre-defined with example values. All values are user changable to make MassCTRL fit your enviorment and needs. All settings is explained in the settings file and should be reviewed before execution of MassCTRL to make all options fit your enviorment and needs.
 
-###Examples
+### Examples
 Lets say you have a classroom with 25 linux clients and you need to install a new software package in .deb format. Just make a recipe for the install and execute it on the group file conyaining the classroom clients. Ex.
 
 **group file (clab):**  
@@ -115,8 +115,6 @@ and so on.....
 PUT:/home/master/Download/new_software.deb /tmp/  
 EXEC:sudo dpkg -i /tmp/new_software.deb  
 EXEC:rm /tmp/nre_software.deb
-
-
 
 To install the new software on to all clients in the class room, execute command:  
 py MassCTRL.py group=clab recipe=install_new_sw
