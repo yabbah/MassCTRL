@@ -179,7 +179,6 @@ def SshExecute(host, user, passwd, string):
 	try:
 		with shell:
 			result = shell.run(command, allow_error=True)
-			#command = str(command).replace(command_delimiter, ' ')
 			command = ', '.join(command)
 			command = command.replace('sh, -c, ','')
 		
@@ -393,7 +392,7 @@ def GetClients(group):
 			content = ReadFile(groupfiles + group)
 			
 			for client in content:
-				if client != '' and client != '\n':
+				if client != '' and client != '\n' and client[0] != '#':
 					client = client.split(' ')
 					
 					if use_hostname == True:
