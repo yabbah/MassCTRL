@@ -82,7 +82,7 @@ def CheckClient(address):
 		if write_client_log == True:
 			WriteClientLog(str(host), 'Error: Cant do host lookup @' + str(host) + '. No entry in hosts file?')
 
-
+## Status of the specified clients
 def ClientStatus(group):
 	clients = GetClients(group)
 	ClearScreen()
@@ -96,7 +96,7 @@ def ClientStatus(group):
 			print(format(col.yellow1(client), '52'), col.blink_red1('Offline'))
 	print ('')
 
-
+## Runs the ClientStatus Ticker
 def ClientStatusTicker(group):
 	while True:
 		ClientStatus(group)
@@ -217,6 +217,7 @@ def SshExecute(host, user, passwd, string):
 		if write_client_log == True:
 			WriteClientLog('Error: Cant connect to client  ' + host)
 
+
 ## Executes the command locally
 def LocalExecute(string):
 	command = ['sh', '-c']
@@ -258,6 +259,7 @@ def LocalExecute(string):
 			WriteMasterLog('local: Error: Cant execute command')
 		if write_client_log == True:
 			WriteClientLog('local', 'Error: Cant execute command')
+
 
 ## Main function for executing remote commands
 def exec_command(group, recipe):

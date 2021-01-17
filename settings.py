@@ -16,8 +16,8 @@ clientloglocation = './client_logs/'
 # Location of key file
 keyfile = '/home/humanizer/MassCTRL/keys.dat'
 
-#Cipher key file
-cipfile ='/home/humanizer/MassCTRL/cip.dat'
+#Cipher key file (Future feature)
+#cipfile ='/home/humanizer/MassCTRL/cip.dat'
 
 # Specify location of private key if not in default path
 private_key = '/home/humanizer/.ssh/id_rsa'
