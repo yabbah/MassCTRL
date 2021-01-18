@@ -38,6 +38,7 @@ def WriteMasterLog(logmessage):
 	try:
 		with open(masterlogfile, 'a+') as log:
 			log.write(TimeDate() + ': ' + str(logmessage) + '\n')
+
 	except:
 		print(col.red1 + 'Error: Cant write to log' + col.normal)
 
@@ -47,6 +48,7 @@ def WriteClientLog(client, logmessage):
 	try:
 		with open(clientloglocation + client + '.log', 'a+') as log:
 			log.write(TimeDate() + ': ' + str(logmessage) + '\n')
+
 	except:
 		print(col.red1 + 'Error: Cant write to log' + col.normal)
 
@@ -64,6 +66,7 @@ def CheckClient(address):
 	client_response.settimeout(0.5)
 	host = address
 	address = (address, 22)
+
 	try:
 		result = client_response.connect_ex(address)
 	
@@ -77,6 +80,7 @@ def CheckClient(address):
 	
 	except:
 		print(col.red1 + 'Error: Cant do host lookup @' + str(host) + '. No entry in hosts file?' + col.normal)
+
 		if write_master_log == True:
 			WriteMasterLog(str(host) + ': Error: Cant do host lookup @' + str(host) + '. No entry in hosts file?')
 
@@ -90,9 +94,11 @@ def ClientStatus(group):
 	print('')
 	print(format(col.bold_white('Client'), '44'), col.bold_white('Status'))
 	print (col.bold_snow4('-') * 36)
+
 	for client in clients:
 		if CheckClient(client) == True:
 			print(format(col.yellow1(client), '52'), col.green2('Online'))
+
 		else:
 			print(format(col.yellow1(client), '52'), col.blink_red1('Offline'))
 	print ('')
@@ -169,6 +175,7 @@ def SshExecute(host, user, passwd, string):
 	command = ['sh', '-c']
 	string = string.split(command_delimiter)
 	command.extend(string)
+
 	if missing_host_key_accept == True:
 		shell = spur.SshShell(hostname=host, username=user, password=passwd, missing_host_key=spur.ssh.MissingHostKey.accept)
 	
@@ -177,6 +184,7 @@ def SshExecute(host, user, passwd, string):
 
 	else:
 		shell = spur.SshShell(hostname=host, username=user, password=passwd)
+
 	try:
 		with shell:
 			result = shell.run(command, allow_error=True)
@@ -278,9 +286,11 @@ def LocalExecute(string):
 		
 		if write_client_log == True:
 			WriteClientLog('local', 'Executing local command: ' + command + ' with result:')
+
 			if CleanString(str(result.output, 'utf-8')) != '' and CleanString(str(result.output, 'utf-8')) != '\n':
 				outputlocal = CleanString(str(result.output, 'utf-8'))
 				outputlocal = outputlocal.split('\n')
+
 				for row in outputlocal:				
 					WriteClientLog('local', row)
 			WriteClientLog('local', 'Execution ' + FormatReturnCodeLog(str(result.to_error())))
@@ -289,6 +299,7 @@ def LocalExecute(string):
 
 		if write_master_log == True:
 			WriteMasterLog('local: Error: Cant execute command')
+
 		if write_client_log == True:
 			WriteClientLog('local', 'Error: Cant execute command')
 
@@ -354,6 +365,7 @@ def exec_command(group, recipe):
 				if write_client_log == True:
 					WriteClientLog(str(client), 'Client: ' + str(client) + ' does not respond')
 			print('')
+
 	else:
 		print(col.red1 + 'Error: The recipe file has no ingredients' + col.normal)
 
@@ -390,6 +402,7 @@ def FormatReturnCodeLog(returncode):
 
 	if str(returnnum[2]) == '0':
 		return (returncode + ' - ' + rc_message)
+	
 	else:
 		return (returncode + ' - ' + rc_message)
 
@@ -495,6 +508,7 @@ def InventoryList():
 			print(entry.replace('./groups/', ''))
 		
 		print('')
+	
 	else:
 		print(col.red1 + 'Error: Group directory ' + groupfiles + ' does not exist' + col.normal)
 		sys.exit(1)
@@ -517,15 +531,18 @@ def InventoryList():
 ## Function to handle file transfers
 def FileOperation(host, user, passwd, source, dest, direction):
 	command = ['sh', '-c']
+
 	if missing_host_key_accept == True:
 		if direction == 'put':
 			scp_command = ['sshpass -p ' + passwd + ' scp -v -p ' + source + ' ' +user + '@' + host + ':' + dest]
+
 		elif direction == 'get':
 			scp_command = ['sshpass -p ' + passwd + ' scp -v -p ' + user + '@' + host + ':' + source + ' ' + dest]
 
 	else:
 		if direction == 'put':
 			scp_command = ['scp -v -p ' + source + ' ' +user + '@' + host + ':' + dest]
+
 		elif direction == 'get':
 			scp_command = ['scp -v -p ' + user + '@' + host + ':' + dest + ' ' + source]
 
@@ -534,8 +551,10 @@ def FileOperation(host, user, passwd, source, dest, direction):
 	
 	if command_output == True and direction == 'put':
 		print('Sending file: ' + col.yellow1 + source + col.normal + ' to remote: ' + col.orange + dest + col.normal)
+
 	elif command_output == True and direction == 'get':
 		print('Receiving file: ' + col.yellow1 + source + col.normal + ' from remote: ' + col.orange + dest + col.normal)
+
 	try:
 		with shell:
 			result = shell.run(command)
@@ -570,6 +589,7 @@ def FileOperation(host, user, passwd, source, dest, direction):
 				WriteClientLog(host, CleanString(str(result.output, 'utf-8')))
 
 			WriteClientLog(host, 'Execution ' + FormatReturnCodeLog(str(result.to_error())))
+
 	except:
 		passwd = ''
 		print(col.red1 + 'Error: I probably couldnt find the requested file @' + host + col.normal)		
