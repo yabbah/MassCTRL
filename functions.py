@@ -19,6 +19,7 @@ return_code = {
 	'0': 'Success',
 	'1': 'Catchall for general errors',
 	'2': 'Misuse of shell builtins',
+	'100': 'Access denied',
 	'126': 'Command invoked cannot execute',
 	'127': 'Command not found',
 	'128': 'Invalid argument to exit',
@@ -181,7 +182,9 @@ def SshExecute(host, user, passwd, string):
 			result = shell.run(command, allow_error=True)
 			command = ', '.join(command)
 			command = command.replace('sh, -c, ','')
-		
+			
+		passwd = ''
+
 		if command_output == True:
 			print('Executing command: ' + col.steelblue1 + command + col.normal + ' with result:')
 					
@@ -190,33 +193,53 @@ def SshExecute(host, user, passwd, string):
 				print(CleanString(str(result.output, 'utf-8')))
 		
 		if return_code_output == True:
-			print('Execution ' + FormatReturnCode(str(result.to_error())))
-			passwd = ''
-		
+				print('Execution ' + FormatReturnCode(str(result.to_error())))
+
 		if write_master_log == True:
 			WriteMasterLog(host + ': Executing command: ' + command + ' with result:')
 			
 			if CleanString(str(result.output, 'utf-8')) != '' and CleanString(str(result.output, 'utf-8')) != '\n':
-				WriteMasterLog(host + ': ' + CleanString(str(result.output, 'utf-8')))
+				outputssh = CleanString(str(result.output, 'utf-8'))
+				outputssh = outputssh.split('\n')
+
+				for row in outputssh:				
+					WriteMasterLog(host + ': ' + row)
 			
 			WriteMasterLog(host + ': Execution ' + FormatReturnCodeLog(str(result.to_error())))
+		
 		if write_client_log == True: 
 			WriteClientLog(host, 'Executing command: ' + command + ' with result:')
 			
 			if CleanString(str(result.output, 'utf-8')) != '' and CleanString(str(result.output, 'utf-8')) != '\n':
-				WriteClientLog(host, CleanString(str(result.output, 'utf-8')))
+				outputssh = CleanString(str(result.output, 'utf-8'))
+				outputssh = outputssh.split('\n')
 
+				for row in outputssh:					
+					WriteClientLog(host, row)
 			WriteClientLog(host, 'Execution ' + FormatReturnCodeLog(str(result.to_error())))
 	
-	except:
+	except Exception as e:
+		print(e)
+		e = str(e).split('\n')
 		passwd = ''
-		print(col.red1 + 'Error: Cant connect to client  ' + host + col.normal)		
+		print(col.red1 + 'Error: Cant connect to client ' + host)
+		
+		for error in e:
+			print(str(error))
+		
+		print(col.normal)
 		
 		if write_master_log == True:
-			WriteMasterLog(host + ': Error: Cant connect to client  ' + host)
+			WriteMasterLog(host + ': Error: Cant connect to client ' + host)
+			
+			for error in e:
+				WriteMasterLog(host + ': ' + error)
+		
 		if write_client_log == True:
-			WriteClientLog('Error: Cant connect to client  ' + host)
-
+			WriteClientLog(host, 'Error: Cant connect to client ' + host)
+			
+			for error in e:
+				WriteClientLog(host, error)
 
 ## Executes the command locally
 def LocalExecute(string):
@@ -243,14 +266,23 @@ def LocalExecute(string):
 	
 		if write_master_log == True:
 			WriteMasterLog('Executing local command: ' + command + ' with result:')
+			
 			if CleanString(str(result.output, 'utf-8')) != '' and CleanString(str(result.output, 'utf-8')) != '\n':
-				WriteMasterLog(CleanString(str(result.output, 'utf-8')))
+				outputlocal = CleanString(str(result.output, 'utf-8'))
+				outputlocal = outputlocal.split('\n')
+				
+				for row in outputlocal:
+					WriteMasterLog(row)
+			
 			WriteMasterLog('Execution ' + FormatReturnCodeLog(str(result.to_error())))
 		
 		if write_client_log == True:
 			WriteClientLog('local', 'Executing local command: ' + command + ' with result:')
 			if CleanString(str(result.output, 'utf-8')) != '' and CleanString(str(result.output, 'utf-8')) != '\n':
-				WriteClientLog('local', CleanString(str(result.output, 'utf-8')))
+				outputlocal = CleanString(str(result.output, 'utf-8'))
+				outputlocal = outputlocal.split('\n')
+				for row in outputlocal:				
+					WriteClientLog('local', row)
 			WriteClientLog('local', 'Execution ' + FormatReturnCodeLog(str(result.to_error())))
 	except:
 		print(col.red1 + 'Error: Cant execute command' + col.normal)		
@@ -337,7 +369,10 @@ def FormatReturnCode(returncode):
 	returncode = str(returncode[0])
 	returnnum = str(returncode).split(' ')
 	rc_message = return_code.get(str(returnnum[2]))
-
+	
+	if rc_message is None:
+		rc_message = returnnum[2]
+	
 	if str(returnnum[2]) == '0':
 		return (returncode + ' - ' + col.green2 + rc_message + col.normal)
 	else:
@@ -349,6 +384,9 @@ def FormatReturnCodeLog(returncode):
 	returncode = str(returncode[0])
 	returnnum = str(returncode).split(' ')
 	rc_message = return_code.get(str(returnnum[2]))
+	
+	if rc_message is None:
+		rc_message = returnnum[2]
 
 	if str(returnnum[2]) == '0':
 		return (returncode + ' - ' + rc_message)
