@@ -25,7 +25,7 @@ return_code = {
 	'128': 'Invalid argument to exit',
 }
 
-
+# Date and time for log function
 def TimeDate():
 	dateandtime = datetime.now()
 	date_time = dateandtime.strftime('%Y-%m-%d %H:%M:%S')
