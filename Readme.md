@@ -10,6 +10,12 @@ Execution of MassCTRL requires two inputs, group and recipe. Example:
 ~~~
 py MassCTRL.py group=allservers recipe=status
 ~~~
+
+It is also possible to use multiple groups and multiple recipes in the same execution. Specify multiple groups or/and recipes separated by ' , '. Example:
+~~~
+py MassCTRL.py group=archclients,fileservers recipe=cleanup_tmp,install_new_software
+~~~
+
 ### Group file and syntax:
 
 Each group file contains one or more clients to build the specific group. The syntax of the group file is simple and as follows. Clientname IP-address Ex:
