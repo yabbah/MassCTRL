@@ -52,12 +52,10 @@ def WriteClientLog(client, logmessage):
 	except:
 		print(col.red1 + 'Error: Cant write to log' + col.normal)
 
- 
+
 ## Clear screen
 def ClearScreen():
-	curses.setupterm() 
-	clear = str(curses.tigetstr('clear'), 'ascii') 
-	sys.stdout.write(clear) 
+	os.system('clear')
 
 
 ## Check client response on ssh port
