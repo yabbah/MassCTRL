@@ -313,7 +313,7 @@ def LocalExecute(string):
 			WriteMasterLog('Execution ' + FormatReturnCodeLog(str(result.to_error())))
 		
 		if write_client_log == True:
-			WriteClientLog('local', 'Executing local command: ' + command + ' with result:')
+			WriteClientLog('Local', 'Executing local command: ' + command + ' with result:')
 
 			if CleanString(str(result.output, 'utf-8')) != '' and CleanString(str(result.output, 'utf-8')) != '\n':
 				outputlocal = CleanString(str(result.output, 'utf-8'))
@@ -321,21 +321,21 @@ def LocalExecute(string):
 
 				for row in outputlocal:				
 					WriteClientLog('local', row)
-			WriteClientLog('local', 'Execution ' + FormatReturnCodeLog(str(result.to_error())))
+			WriteClientLog('Local', 'Execution ' + FormatReturnCodeLog(str(result.to_error())))
 
 		if write_error_log == True:
 			executiontest = FormatReturnCodeErrorLog(str(result.to_error()))
-			if executiontest != 0:
+			if executiontest != '0':
 				WriteErrorLog('Local Execution of command ' + command + ' failed with return code ' + executiontest)			
 
 	except:
 		print(col.red1 + 'Error: Cant execute command' + col.normal)		
 
 		if write_master_log == True:
-			WriteMasterLog('local: Error: Cant execute command')
+			WriteMasterLog('Local: Error: Cant execute command')
 
 		if write_client_log == True:
-			WriteClientLog('local', 'Error: Cant execute command')
+			WriteClientLog('Local', 'Error: Cant execute command')
 
 		if write_error_log == True:
 			WriteErrorLog('Local: Error: Cant execute command')
@@ -654,7 +654,6 @@ def FileOperation(host, user, passwd, source, dest, direction):
 
 		if write_client_log == True:
 			WriteClientLog(host, ': Receiving file ' + source + ' from remote: ' + dest)		
-
 
 	try:
 		with shell:
