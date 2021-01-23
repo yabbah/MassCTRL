@@ -604,10 +604,10 @@ def FileOperation(host, user, passwd, source, dest, direction):
 
 	if missing_host_key_accept == True:
 		if direction == 'put':
-			scp_command = ['sshpass -p ' + passwd + ' scp -v -p ' + source + ' ' +user + '@' + host + ':' + dest]
+			scp_command = ['sshpass -p ' + "'" + passwd + "'" + scp -v -p ' + source + ' ' +user + '@' + host + ':' + dest]
 
 		elif direction == 'get':
-			scp_command = ['sshpass -p ' + passwd + ' scp -v -p ' + user + '@' + host + ':' + source + ' ' + dest]
+			scp_command = ['sshpass -p ' + "'" + passwd + "'" + scp -v -p ' + user + '@' + host + ':' + source + ' ' + dest]
 
 	else:
 		if direction == 'put':
