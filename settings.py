@@ -10,6 +10,9 @@ recipefiles = './recipes/'
 # Location of master log file
 masterlogfile = './MassCTRL.log'
 
+# Location of error log file
+errorlogfile = './MassCTRL_error.log'
+
 # Location (directory) of client log files
 clientloglocation = './client_logs/'
 
@@ -61,3 +64,7 @@ write_client_log = True
 # Renames recieved files with destination hostname in the beginnig of filename
 # Must be True on multi host operations. Otherwise files will be overwritten
 get_file_rename = True
+
+# Separate error log file
+write_error_log = True
+

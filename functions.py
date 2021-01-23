@@ -43,6 +43,16 @@ def WriteMasterLog(logmessage):
 		print(col.red1 + 'Error: Cant write to log' + col.normal)
 
 
+# Write to specified error log
+def WriteErrorLog(logmessage):
+	try:
+		with open(errorlogfile, 'a+') as log:
+			log.write(TimeDate() + ': ' + str(logmessage) + '\n')
+
+	except:
+		print(col.red1 + 'Error: Cant write to log' + col.normal)
+
+
 # Write log message to specified log file
 def WriteClientLog(client, logmessage):
 	try:
@@ -81,6 +91,9 @@ def CheckClient(address):
 
 		if write_master_log == True:
 			WriteMasterLog(str(host) + ': Error: Cant do host lookup @' + str(host) + '. No entry in hosts file?')
+
+		if write_error_log == True:
+			WriteErrorLog(str(host) + ': Error: Cant do host lookup @' + str(host) + '. No entry in hosts file?')
 
 		if write_client_log == True:
 			WriteClientLog(str(host), 'Error: Cant do host lookup @' + str(host) + '. No entry in hosts file?')
@@ -124,6 +137,9 @@ def CollectFiles(path):
 
 		if write_master_log == True:
 			WriteMasterLog('Error: Cant collect groups and recipes from specified directory')
+
+		if write_error_log == True:
+			WriteErrorLog('Error: Cant collect groups and recipes from specified directory')
 	
 
 ## String cleanup
@@ -151,7 +167,8 @@ def ReadFile(file):
 		if write_master_log == True:
 			WriteMasterLog('Error: Cant open file ' + str(file))
 
-
+		if write_error_log == True:
+			WriteErrorLog('Error: Cant open file ' + str(file))
 
 ## Get the working directory of MassCTRL ## UNUSED ##
 def WorkingDirectory():
@@ -200,7 +217,7 @@ def SshExecute(host, user, passwd, string):
 		
 		if return_code_output == True:
 				print('Execution ' + FormatReturnCode(str(result.to_error())))
-
+		
 		if write_master_log == True:
 			WriteMasterLog(host + ': Executing command: ' + command + ' with result:')
 			
@@ -224,6 +241,13 @@ def SshExecute(host, user, passwd, string):
 					WriteClientLog(host, row)
 			WriteClientLog(host, 'Execution ' + FormatReturnCodeLog(str(result.to_error())))
 	
+
+		if write_error_log == True:
+			#print(result.to_error())
+			executiontest = FormatReturnCodeErrorLog(str(result.to_error()))
+			if executiontest != 0:
+				WriteErrorLog(host + ': Execution of command ' + command + ' failed with return code ' + executiontest)
+
 	except Exception as e:
 		print(e)
 		e = str(e).split('\n')
@@ -232,7 +256,7 @@ def SshExecute(host, user, passwd, string):
 		
 		for error in e:
 			print(str(error))
-		
+			
 		print(col.normal)
 		
 		if write_master_log == True:
@@ -246,6 +270,12 @@ def SshExecute(host, user, passwd, string):
 			
 			for error in e:
 				WriteClientLog(host, error)
+
+		if write_error_log == True:
+			WriteErrorLog('Error: Cant connect to client ' + host)
+			for error in e:
+				WriteErrorLog(host + ': ' + error)
+
 
 ## Executes the command locally
 def LocalExecute(string):
@@ -292,6 +322,12 @@ def LocalExecute(string):
 				for row in outputlocal:				
 					WriteClientLog('local', row)
 			WriteClientLog('local', 'Execution ' + FormatReturnCodeLog(str(result.to_error())))
+
+		if write_error_log == True:
+			executiontest = FormatReturnCodeErrorLog(str(result.to_error()))
+			if executiontest != 0:
+				WriteErrorLog('Local Execution of command ' + command + ' failed with return code ' + executiontest)			
+
 	except:
 		print(col.red1 + 'Error: Cant execute command' + col.normal)		
 
@@ -300,6 +336,9 @@ def LocalExecute(string):
 
 		if write_client_log == True:
 			WriteClientLog('local', 'Error: Cant execute command')
+
+		if write_error_log == True:
+			WriteErrorLog('Local: Error: Cant execute command')
 
 
 ## Main function for executing remote commands
@@ -360,8 +399,13 @@ def exec_command(group, recipe):
 
 				if write_master_log == True:
 					WriteMasterLog(str(client) + ': Client: ' + str(client) + ' does not respond')
+				
 				if write_client_log == True:
 					WriteClientLog(str(client), 'Client: ' + str(client) + ' does not respond')
+				
+				if write_error_log == True:
+					WriteErrorLog(str(client) + ': Client: ' + str(client) + ' does not respond')	
+
 			print('')
 
 	else:
@@ -369,9 +413,12 @@ def exec_command(group, recipe):
 
 		if write_master_log == True:
 			WriteMasterLog(str(client) + ': Error: The recipe file has no ingredients')
+		
 		if write_client_log == True:
 			WriteClientLog(str(client), + 'Error: The recipe file has no ingredients')
-
+		
+		if write_error_log == True:
+			WriteErrorLog(str(client), + 'Error: The recipe file has no ingredients')
 
 ## Format the return code of executed command
 def FormatReturnCode(returncode):
@@ -405,6 +452,18 @@ def FormatReturnCodeLog(returncode):
 		return (returncode + ' - ' + rc_message)
 
 
+def FormatReturnCodeErrorLog(returncode):
+	returncode = returncode.split('\n')
+	returncode = str(returncode[0])
+	returnnum = str(returncode).split(' ')
+	rc_message = return_code.get(str(returnnum[2]))
+	
+	if rc_message is None:
+		rc_message = returnnum[2]
+
+	return (str(returnnum[2]))
+
+
 ## Get login credentials from key file.
 def GetCredentials(host):
 	if os.path.exists(keyfile):
@@ -430,6 +489,8 @@ def GetCredentials(host):
 	
 	else:
 		print(col.red1 + 'The keyfile ' + keyfile + ' does not exist' + col.normal)
+		WriteErrorLog('The keyfile ' + keyfile + ' does not exist')
+
 		sys.exit(1)		
 
 
@@ -454,6 +515,7 @@ def GetClients(group):
 	
 		else:
 			print(col.red1 + 'The group ' + group + ' does not exist' + col.normal)
+			WriteErrorLog('The group ' + group + ' does not exist')
 			sys.exit(1)
 	
 	return hosts
@@ -478,6 +540,9 @@ def GetRecipe(recipe):
 						if write_master_log == True:
 							WriteMasterLog('The recipe file ' + recipe + ' is invalid and does not contain mandatory trigger commands')
 
+						if write_error_log == True:
+							WriteErrorLog('The recipe file ' + recipe + ' is invalid and does not contain mandatory trigger commands')
+						
 						sys.exit(1)
 				
 				else:
@@ -489,6 +554,9 @@ def GetRecipe(recipe):
 			if write_master_log == True:
 				WriteMasterLog('The recipe ' + recipe + ' does not exist')
 
+			if write_error_log == True:
+				WriteErrorLog('The recipe ' + recipe + ' does not exist')
+			
 			sys.exit(1)
 	
 	return ingredients
@@ -522,7 +590,11 @@ def InventoryList():
 				
 	else:
 		print(col.red1 + 'Error: Recipe directory ' + recipefiles + ' does not exist' + col.normal)
+		if write_error_log == True:
+			WriteErrorLog('Error: Recipe directory ' + recipefiles + ' does not exist' + col.normal)
+
 		sys.exit(1)
+
 	print('')
 
 
@@ -550,8 +622,21 @@ def FileOperation(host, user, passwd, source, dest, direction):
 	if command_output == True and direction == 'put':
 		print('Sending file: ' + col.yellow1 + source + col.normal + ' to remote: ' + col.orange + dest + col.normal)
 
+		if write_master_log == True:
+			WriteMasterLog(host + ': Sending file ' + source + ' -> ' + dest)
+
+		if write_client_log == True:
+			WriteClientLog(host, ': Sending file ' + source + ' -> ' + dest)
+
 	elif command_output == True and direction == 'get':
 		print('Receiving file: ' + col.yellow1 + source + col.normal + ' from remote: ' + col.orange + dest + col.normal)
+
+		if write_master_log == True:
+			WriteMasterLog(host + ': Receiving file ' + source + ' from remote: ' + dest)
+
+		if write_client_log == True:
+			WriteClientLog(host, ': Receiving file ' + source + ' from remote: ' + dest)		
+
 
 	try:
 		with shell:
@@ -559,9 +644,6 @@ def FileOperation(host, user, passwd, source, dest, direction):
 		
 		passwd = ''
 		filename = source.rsplit('/', 1)[-1]
-
-		if command_output == True:
-			print(direction + ' ' + source + ' -> ' + dest)
 
 		if exec_output == True:
 			if CleanString(str(result.output, 'utf-8')) != '' and CleanString(str(result.output, 'utf-8')) != '\n':
@@ -574,12 +656,11 @@ def FileOperation(host, user, passwd, source, dest, direction):
 			shutil.move(dest + filename, dest + host + '_' + filename)
 	
 		if write_master_log == True:
-			WriteMasterLog(host + ': ' + direction + ' ' + source + ' -> ' + dest)
-
 			if CleanString(str(result.output, 'utf-8')) != '' and CleanString(str(result.output, 'utf-8')) != '\n':
 				WriteMasterLog(host + ': ' + CleanString(str(result.output, 'utf-8')))
 
 			WriteMasterLog(host + ': ' + 'Execution ' + FormatReturnCodeLog(str(result.to_error())))
+		
 		if write_client_log == True:
 			WriteClientLog(host, direction + ' ' + source + ' -> ' + dest)
 
@@ -588,12 +669,21 @@ def FileOperation(host, user, passwd, source, dest, direction):
 
 			WriteClientLog(host, 'Execution ' + FormatReturnCodeLog(str(result.to_error())))
 
+		if write_error_log == True:
+			executiontest = FormatReturnCodeErrorLog(str(result.to_error()))
+
+			if executiontest != 0:
+				WriteErrorLog(host + ': Execution of file transfer failed')
+
 	except:
 		passwd = ''
-		print(col.red1 + 'Error: I probably couldnt find the requested file @' + host + col.normal)		
+		print(col.red1 + 'Error: I probably couldnt find the requested file or directory @' + host + col.normal)		
 		
 		if write_master_log == True:
-			WriteMasterLog(host + ': Error: I probably couldnt find the requested file @' + host)
+			WriteMasterLog(host + ': Error: I probably couldnt find the requested file or directory @' + host)
 		
 		if write_client_log == True:		
-			WriteClientLog(host, 'Error: I probably couldnt find the requested file @' + host)
+			WriteClientLog(host, 'Error: I probably couldnt find the requested file or directory @' + host)
+
+		if write_error_log == True:
+			WriteErrorLog(host + ': Error: I probably couldnt find the requested file or directory @' + host)
