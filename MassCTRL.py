@@ -41,7 +41,9 @@ def ReadArguments():
 
 def main():
 	os.chdir(pathlib.Path(__file__).parent.absolute())
+	fn.CreateClientLogLocation(clientloglocation)
 	group, recipe =	ReadArguments()
+	
 	if recipe == 'status':
 		fn.ClientStatusTicker(group)
 	

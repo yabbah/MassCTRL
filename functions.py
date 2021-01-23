@@ -32,6 +32,10 @@ def TimeDate():
 	
 	return str(date_time)
 
+def CreateClientLogLocation(location):
+	if write_client_log == True:
+		if not os.path.exists(location):
+			os.mkdir(location)
 
 # Write log message to specified log file
 def WriteMasterLog(logmessage):
@@ -55,8 +59,12 @@ def WriteErrorLog(logmessage):
 
 # Write log message to specified log file
 def WriteClientLog(client, logmessage):
+	location = clientloglocation
+	if location[-1] != '/':
+		location += '/'
+	
 	try:
-		with open(clientloglocation + client + '.log', 'a+') as log:
+		with open(location + client + '.log', 'a+') as log:
 			log.write(TimeDate() + ': ' + str(logmessage) + '\n')
 
 	except:
