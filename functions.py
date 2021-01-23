@@ -245,7 +245,7 @@ def SshExecute(host, user, passwd, string):
 		if write_error_log == True:
 			#print(result.to_error())
 			executiontest = FormatReturnCodeErrorLog(str(result.to_error()))
-			if executiontest != 0:
+			if executiontest != '0':
 				WriteErrorLog(host + ': Execution of command ' + command + ' failed with return code ' + executiontest)
 
 	except Exception as e:
@@ -672,7 +672,7 @@ def FileOperation(host, user, passwd, source, dest, direction):
 		if write_error_log == True:
 			executiontest = FormatReturnCodeErrorLog(str(result.to_error()))
 
-			if executiontest != 0:
+			if executiontest != '0':
 				WriteErrorLog(host + ': Execution of file transfer failed')
 
 	except:
