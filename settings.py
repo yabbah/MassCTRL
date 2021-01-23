@@ -2,10 +2,10 @@
 ## User defined values
 
 # Location of group files
-groupfiles = './groups/'
+groupfiles = './groups'
 
 # Location of recipe files
-recipefiles = './recipes/'
+recipefiles = './recipes'
 
 # Location of master log file
 masterlogfile = './MassCTRL.log'

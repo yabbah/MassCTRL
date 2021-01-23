@@ -49,7 +49,7 @@ def main():
 		fn.InventoryList()
 	
 	else:
-		fn.exec_command(group, recipe)
+		fn.ExecCommand(group, recipe)
 
 
 if __name__ == '__main__':

@@ -342,7 +342,7 @@ def LocalExecute(string):
 
 
 ## Main function for executing remote commands
-def exec_command(group, recipe):
+def ExecCommand(group, recipe):
 	ClearScreen()
 	clients = GetClients(group)
 	recipe = GetRecipe(recipe)
@@ -419,6 +419,7 @@ def exec_command(group, recipe):
 		
 		if write_error_log == True:
 			WriteErrorLog(str(client), + 'Error: The recipe file has no ingredients')
+
 
 ## Format the return code of executed command
 def FormatReturnCode(returncode):
@@ -498,10 +499,14 @@ def GetCredentials(host):
 def GetClients(group):
 	hosts = []
 	groups = group.split(',')
+	location = groupfiles
 	
+	if location[-1] != '/':
+		location = location + '/'
+
 	for group in groups:
-		if os.path.exists(groupfiles + group):
-			content = ReadFile(groupfiles + group)
+		if os.path.exists(location + group):
+			content = ReadFile(location + group)
 			
 			for client in content:
 				if client != '' and client != '\n' and client[0] != '#':
@@ -525,9 +530,13 @@ def GetClients(group):
 def GetRecipe(recipe):
 	ingredients = []
 	recipes = str(recipe).split(',')
+	location = recipefiles
+	
+	if location[-1] != '/':
+		location = location + '/'
 	for recipe in recipes:
-		if os.path.exists(recipefiles + recipe):
-			recipe = ReadFile(recipefiles + recipe)
+		if os.path.exists(location + recipe):
+			recipe = ReadFile(location + recipe)
 			
 			for command in recipe:
 				if command != '' and command[0] != '#':
@@ -565,33 +574,43 @@ def GetRecipe(recipe):
 ## Show a list of groups and recipes
 def InventoryList():
 	if os.path.exists(groupfiles):
+		grplocation = groupfiles
+		
+		if grplocation[-1] != '/':
+			grplocation = grplocation + '/'
+
 		print(col.bold_green3('\nGroups:'))
 		print(col.bold_snow4('-' * 20))
-		groups = CollectFiles(groupfiles)
+		groups = CollectFiles(grplocation)
 		groups.sort()
 		
 		for entry in groups:
-			print(entry.replace('./groups/', ''))
+			print(entry.replace(grplocation, ''))
 		
 		print('')
 	
 	else:
-		print(col.red1 + 'Error: Group directory ' + groupfiles + ' does not exist' + col.normal)
+		print(col.red1 + 'Error: Group directory ' + grplocation + ' does not exist' + col.normal)
 		sys.exit(1)
 
 	if os.path.exists(recipefiles):
+		reclocation = recipefiles
+		
+		if reclocation[-1] != '/':
+			reclocation = reclocation + '/'
+
 		print(col.bold_green3('\nRecipes:'))
 		print(col.bold_snow4('-' * 20))
-		recipes = CollectFiles(recipefiles)
+		recipes = CollectFiles(reclocation)
 		recipes.sort()
 		
 		for entry in recipes:
-			print(entry.replace('./recipes/', ''))
+			print(entry.replace(reclocation, ''))
 				
 	else:
-		print(col.red1 + 'Error: Recipe directory ' + recipefiles + ' does not exist' + col.normal)
+		print(col.red1 + 'Error: Recipe directory ' + reclocation + ' does not exist' + col.normal)
 		if write_error_log == True:
-			WriteErrorLog('Error: Recipe directory ' + recipefiles + ' does not exist' + col.normal)
+			WriteErrorLog('Error: Recipe directory ' + reclocation + ' does not exist' + col.normal)
 
 		sys.exit(1)
 
