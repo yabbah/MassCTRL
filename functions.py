@@ -639,7 +639,6 @@ def FileOperation(host, user, passwd, source, dest, direction):
 
 
 	try:
-		print(command)
 		with shell:
 			result = shell.run(command)
 		
