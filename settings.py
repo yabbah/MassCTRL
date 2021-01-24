@@ -25,7 +25,8 @@ keyfile = '/home/humanizer/MassCTRL/keys.dat'
 # Specify location of private key if not in default path
 private_key = '/home/humanizer/.ssh/id_rsa'
 
-# Enable this if you have an envoirment with a working public key ssh login configured
+# Enable this if you have an envoirment with a working 
+# passwordless ssk-keys solution
 private_key_login = False
 
 # Accept missing host key when connecting to client
@@ -46,7 +47,8 @@ command_output = True
 # Print return code of executed command
 return_code_output = True
 
-# Use hostname instead of ip-address when connecting to client
+# Use hostname instead of ip-address when connecting to 
+#client
 use_hostname = True
 
 # Delimiter for executing command syntax
@@ -61,8 +63,10 @@ write_master_log = True
 # Write to individual log files per client
 write_client_log = True
 
-# Renames recieved files with destination hostname in the beginnig of filename
-# Must be True on multi host operations. Otherwise files will be overwritten
+# Renames recieved files with destination hostname in 
+# the beginnig of filename
+# Must be True on multi host operations. Otherwise 
+# files will be overwritten
 get_file_rename = True
 
 # Separate error log file

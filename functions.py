@@ -5,7 +5,6 @@ import os
 import subprocess
 import spur
 import socket
-import curses
 import sys
 import time
 import shutil
@@ -198,7 +197,7 @@ def SshExecute(host, user, passwd, string):
 	command = ['sh', '-c']
 	string = string.split(command_delimiter)
 	command.extend(string)
-
+	print(command)
 	if missing_host_key_accept == True:
 		shell = spur.SshShell(hostname=host, username=user, password=passwd, missing_host_key=spur.ssh.MissingHostKey.accept)
 	
@@ -291,6 +290,7 @@ def LocalExecute(string):
 	string = string.split(command_delimiter)
 	command.extend(string)
 	shell = spur.LocalShell()
+
 	try:
 		with shell:
 			result = shell.run(command, allow_error=True)
@@ -393,7 +393,6 @@ def ExecCommand(group, recipe):
 							FileOperation(client, user, passwd, source, dest, 'get')	
 	
 					print('-' * 30)
-					#print('')
 					passwd = ''
 					
 				except Exception as error:
