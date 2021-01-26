@@ -197,7 +197,7 @@ def SshExecute(host, user, passwd, string):
 	command = ['sh', '-c']
 	string = string.split(command_delimiter)
 	command.extend(string)
-	print(command)
+	
 	if missing_host_key_accept == True:
 		shell = spur.SshShell(hostname=host, username=user, password=passwd, missing_host_key=spur.ssh.MissingHostKey.accept)
 	
