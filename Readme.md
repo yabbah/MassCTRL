@@ -16,7 +16,7 @@ It is also possible to use multiple groups and multiple recipes in the same exec
 py MassCTRL.py group=archclients,fileservers recipe=cleanup_tmp,install_new_software
 ~~~
 
-This system is heavily dependent on ssh and scp and that your enviorment is up prorperly for ssh and scp operations. If ssh and scp does not work in your enviorment, MassCTRL will fail too.
+This system is heavily dependent on ssh and scp and that your enviorment is set up prorperly for ssh and scp operations. If ssh and scp does not work in your enviorment, MassCTRL will fail too.
 
 ### Group file and syntax:
 
@@ -141,7 +141,7 @@ and so on.....
 ~~~
 PUT:/home/master/Download/new_software.deb /tmp/  
 EXEC:sudo dpkg -i /tmp/new_software.deb  
-EXEC:rm /tmp/nre_software.deb
+EXEC:rm /tmp/new_software.deb
 ~~~
 
 To install the new software on to all clients in the class room, execute command:  
