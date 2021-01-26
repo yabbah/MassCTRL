@@ -30,7 +30,7 @@ private_key = '/home/humanizer/.ssh/id_rsa'
 private_key_login = False
 
 # Accept missing host key when connecting to client
-missing_host_key_accept = True
+missing_host_key_accept = False
 
 # Use a master account for all client connections
 master_account = False
