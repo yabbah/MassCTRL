@@ -16,6 +16,8 @@ It is also possible to use multiple groups and multiple recipes in the same exec
 py MassCTRL.py group=archclients,fileservers recipe=cleanup_tmp,install_new_software
 ~~~
 
+This system is heavily dependent on ssh and scp and that your enviorment is up prorperly for ssh and scp operations. If ssh and scp does not work in your enviorment, MassCTRL will fail too.
+
 ### Group file and syntax:
 
 Each group file contains one or more clients to build the specific group. The syntax of the group file is simple and as follows. Clientname IP-address Ex:
@@ -62,8 +64,7 @@ EXEC:rm /tmp/lab/some_script.py
 ~~~
 py MassCTRL.py group=clab recipe=list  
 ~~~
-
-Or directly: 
+Or directly:  
 ~~~
 py MassCTRL.py list  
 ~~~
@@ -148,3 +149,9 @@ To install the new software on to all clients in the class room, execute command
 py MassCTRL.py group=clab recipe=install_new_sw
 ~~~
 
+**Requirements:**  
+Python 3  
+Python module: Blessed  
+Python module: Spur  
+ssh  
+scp  
