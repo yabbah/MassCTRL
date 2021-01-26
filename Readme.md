@@ -16,7 +16,26 @@ It is also possible to use multiple groups and multiple recipes in the same exec
 py MassCTRL.py group=archclients,fileservers recipe=cleanup_tmp,install_new_software
 ~~~
 
-This system is heavily dependent on ssh and scp and that your enviorment is set up prorperly for ssh and scp operations. If ssh and scp does not work in your enviorment, MassCTRL will fail too.
+This system is heavily dependent on ssh and scp and that your enviorment is set up properly for ssh and scp operations. If ssh and scp does not work in your enviorment, MassCTRL will fail too.
+
+###Installation:  
+**Requirements:**  
+Python 3  
+Python module: Blessed  
+Python module: Spur  
+ssh  
+scp  
+
+Make sure you have ssh and scp and python3 installed on your system.
+clone the MassCTRL repository with the command:  
+~~~ 
+git clone https://github.com/hum4nizer/MassCTRL
+~~~ 
+Install required external python modules:  
+~~~ 
+pip install -r ./requirements.txt
+~~~ 
+Read this manual and create a group file and a simple recipe. Read and edit the settings file to your needs. Do a test run with a non destructive command in the recipe like uname och uptime. Most information is in this manual. If there is any questions about operation, bugs, feature requests, please contact med through the discussion board on Github.
 
 ### Group file and syntax:
 
@@ -76,7 +95,10 @@ Example: py massCTRL.py group=clab recipe=status
 
 ### Key file
 
-> **_ATTENTION!_** **Always remember to set your key file permissions to only read/writable for the user that will execute MassCTRL!** Command: chmod 600 keyfile.dat  
+> **_ATTENTION!_** **Always remember to set your key file permissions to only read/writable for the user that will execute MassCTRL!** Command: 
+> ~~~
+> chmod 600 keyfile.dat
+> ~~~  
 
 This file contains credentials to all clients and servers. If the enviorment is set up with a password-less login to servers and clients, MassCTRL will only use the username from that file. If your enviorment is set up for user and password login it will use those values from this file.
 
@@ -149,9 +171,4 @@ To install the new software on to all clients in the class room, execute command
 py MassCTRL.py group=clab recipe=install_new_sw
 ~~~
 
-**Requirements:**  
-Python 3  
-Python module: Blessed  
-Python module: Spur  
-ssh  
-scp  
+
