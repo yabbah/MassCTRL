@@ -4,7 +4,7 @@ MassCTRL is a control center for your linux clients and servers. With MassCTRL i
 
 MassCTRL can also be used as en execution server and centralize all automatic timebased jobs from one crontab instead of setting cronjobs locally on servers.
 
-MassCTRL uses so called group files and recepie files. A recipe can contain one or many ingredients to process during execution. The execution is targeted on a group file containing the clients or servers.
+MassCTRL uses so called group files and recipe files. A recipe can contain one or many ingredients to process during execution. The execution is targeted on a group file containing the clients or servers.
 
 Execution of MassCTRL requires two inputs, group and recipe. Example:  
 ~~~
