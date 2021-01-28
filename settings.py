@@ -17,10 +17,10 @@ masterlogfile = './MassCTRL.log'
 errorlogfile = './MassCTRL_error.log'
 
 # Location of key file
-keyfile = '/home/USER/MassCTRL/keys.dat'
+keyfile = '/home/humanizer/MassCTRL/keys.dat'
 
 # Specify location of private key if not in default path
-private_key = '/home/USER/.ssh/id_rsa'
+private_key = '/home/humanizer/.ssh/id_rsa'
 
 # Enable this if you have an envoirment with a working 
 # passwordless ssh-keys solution
