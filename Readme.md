@@ -25,7 +25,7 @@ Python module: Blessed
 Python module: Spur  
 ssh  
 scp  
-
+    
 Make sure you have ssh and scp and python3 installed on your system.
 clone the MassCTRL repository with the command:  
 ~~~ 
@@ -89,9 +89,10 @@ py MassCTRL.py list
 ~~~
 
 **status** - Show status on selected group  
-Status is monitoring the specified group continous until stopped.  
-Example: py massCTRL.py group=clab recipe=status  
-
+Status is monitoring the specified group continous until stopped. Example:  
+~~~
+py massCTRL.py group=clab recipe=status  
+~~~
 
 ### Key file
 
