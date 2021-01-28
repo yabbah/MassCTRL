@@ -17,17 +17,17 @@ masterlogfile = './MassCTRL.log'
 errorlogfile = './MassCTRL_error.log'
 
 # Location of key file
-keyfile = '/home/humanizer/MassCTRL/keys.dat'
+keyfile = '/home/USER/MassCTRL/keys.dat'
 
 # Specify location of private key if not in default path
-private_key = '/home/humanizer/.ssh/id_rsa'
+private_key = '/home/USER/.ssh/id_rsa'
 
 # Enable this if you have an envoirment with a working 
 # passwordless ssh-keys solution
 private_key_login = False
 
 # Accept missing host key when connecting to client
-missing_host_key_accept = False
+missing_host_key_accept = True
 
 # Use a master account for all client connections
 master_account = False
