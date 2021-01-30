@@ -35,7 +35,10 @@ Install required external python modules:
 ~~~ 
 pip install -r ./requirements.txt
 ~~~ 
-Read this manual and create a group file and a simple recipe. Read and edit the settings file to your needs. Do a test run with a non destructive command in the recipe like uname och uptime. Most information is in this manual. If there is any questions about operation, bugs, feature requests, please contact med through the discussion board on Github.
+
+Read this manual and create a group file and a simple recipe. Read and edit the settings file to your needs and correct all paths to match your system. Next **create a keyfile** with the credentials to your clients and servers.  
+
+Do a test run with a non destructive command in the recipe like uname och uptime. Most information is in this manual. If there is any questions about operation, bugs, feature requests, please contact med through the discussion board on Github.
 
 ### Group file and syntax:
 

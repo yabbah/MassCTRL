@@ -69,6 +69,3 @@ write_error_log = True
 # Must be True on multi host operations. Otherwise 
 # files will be overwritten
 get_file_rename = True
-
-
-
