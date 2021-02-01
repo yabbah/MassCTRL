@@ -76,11 +76,11 @@ def ClearScreen():
 
 
 ## Check client response on ssh port
-def CheckClient(address):
+def CheckClient(address, port):
 	client_response = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 	client_response.settimeout(0.5)
 	host = address
-	address = (address, 22)
+	address = (address, port)
 
 	try:
 		result = client_response.connect_ex(address)
@@ -114,7 +114,24 @@ def ClientStatus(group):
 	print (col.bold_snow4('-') * 36)
 
 	for client in clients:
-		if CheckClient(client) == True:
+		client = client.split(' ')
+		name = client[0]
+		ip = client[1]
+
+		if len(client) > 2:
+			port = client[2]
+
+		else:
+			port = 22
+
+		if use_hostname == True:
+			client = client[0]
+
+		else:
+			client = client[1]
+
+
+		if CheckClient(client, port) == True:
 			print(format(col.yellow1(client), '52'), col.green2('Online'))
 
 		else:
@@ -377,7 +394,7 @@ def ExecCommand(group, recipe):
 			if client_headline == True:
 				print(col.bold_yellow1(client) + '\n' + (col.darkgray('=') * len(client)))
 
-			if CheckClient(client) == True:
+			if CheckClient(client, port) == True:
 				user, passwd = GetCredentials(client)
 				
 				try:
