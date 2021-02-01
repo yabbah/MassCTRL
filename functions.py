@@ -80,17 +80,15 @@ def CheckClient(address, port):
 	client_response = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 	client_response.settimeout(0.5)
 	host = address
-	address = (address, port)
+	address = (host, int(port))
 
 	try:
 		result = client_response.connect_ex(address)
 	
 		if result == 0:
-		
 			return True
 	
 		else:
-		
 			return False
 	
 	except:
@@ -129,7 +127,6 @@ def ClientStatus(group):
 
 		else:
 			client = client[1]
-
 
 		if CheckClient(client, port) == True:
 			print(format(col.yellow1(client), '52'), col.green2('Online'))
