@@ -36,6 +36,7 @@ def CreateClientLogLocation(location):
 		if not os.path.exists(location):
 			os.mkdir(location)
 
+
 # Write log message to specified log file
 def WriteMasterLog(logmessage):
 	try:
@@ -103,6 +104,7 @@ def CheckClient(address, port):
 		if write_client_log == True:
 			WriteClientLog(str(host), 'Error: Cant do host lookup @' + str(host) + '. No entry in hosts file?')
 
+
 ## Status of the specified clients
 def ClientStatus(group):
 	clients = GetClients(group)
@@ -134,6 +136,7 @@ def ClientStatus(group):
 		else:
 			print(format(col.yellow1(client), '52'), col.blink_red1('Offline'))
 	print ('')
+
 
 ## Runs the ClientStatus Ticker
 def ClientStatusTicker(group):
@@ -190,6 +193,7 @@ def ReadFile(file):
 
 		if write_error_log == True:
 			WriteErrorLog('Error: Cant open file ' + str(file))
+
 
 ## Get the working directory of MassCTRL ## UNUSED ##
 def WorkingDirectory():
