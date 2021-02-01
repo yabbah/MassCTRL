@@ -1,3 +1,9 @@
 1.0.0 (2021-01-28)
 ------------------
   * Initial release
+
+1.0.1 (2021-02-01)
+------------------
+  * Implemented requested feature to be able to specify a unique port per
+    client in a group file.
+

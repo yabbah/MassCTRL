@@ -193,19 +193,19 @@ def TimeDate():
 
 
 ## Executes the command on client
-def SshExecute(host, user, passwd, string):
+def SshExecute(host, port, user, passwd, string):
 	command = ['sh', '-c']
 	string = string.split(command_delimiter)
 	command.extend(string)
 	
 	if missing_host_key_accept == True:
-		shell = spur.SshShell(hostname=host, username=user, password=passwd, missing_host_key=spur.ssh.MissingHostKey.accept)
+		shell = spur.SshShell(hostname=host, port=port, username=user, password=passwd, missing_host_key=spur.ssh.MissingHostKey.accept)
 	
 	elif private_key_login == True:
-		shell = spur.SshShell(hostname=host, username=user)
+		shell = spur.SshShell(hostname=host, port=port, username=user)
 
 	else:
-		shell = spur.SshShell(hostname=host, username=user, password=passwd)
+		shell = spur.SshShell(hostname=host, port=port, username=user, password=passwd)
 
 	try:
 		with shell:
@@ -358,6 +358,22 @@ def ExecCommand(group, recipe):
 
 	if recipe != []:
 		for client in clients:
+			client = client.split(' ')
+			name = client[0]
+			ip = client[1]
+
+			if len(client) > 2:
+				port = client[2]
+
+			else:
+				port = 22
+
+			if use_hostname == True:
+				client = client[0]
+
+			else:
+				client = client[1]
+
 			if client_headline == True:
 				print(col.bold_yellow1(client) + '\n' + (col.darkgray('=') * len(client)))
 
@@ -370,7 +386,7 @@ def ExecCommand(group, recipe):
 						
 						if ingredient[0] == str('EXEC'):
 							ingredient = str(ingredient[1])
-							SshExecute(client, user, passwd, ingredient)
+							SshExecute(client, port, user, passwd, ingredient)
 						
 						elif ingredient[0] == str('LOCAL'):
 							ingredient = str(ingredient[1])
@@ -383,14 +399,14 @@ def ExecCommand(group, recipe):
 							ingredient = ingredient.split(' ')
 							source = str(ingredient[0])
 							dest = str(ingredient[1])
-							FileOperation(client, user, passwd, source, dest, 'put')
+							FileOperation(client, port, user, passwd, source, dest, 'put')
 						
 						elif ingredient[0] == str('GET'):
 							ingredient = str(ingredient[1])
 							ingredient = ingredient.split(' ')
 							source = str(ingredient[0])
 							dest = str(ingredient[1])
-							FileOperation(client, user, passwd, source, dest, 'get')	
+							FileOperation(client, port, user, passwd, source, dest, 'get')	
 	
 					print('-' * 30)
 					passwd = ''
@@ -517,13 +533,7 @@ def GetClients(group):
 			
 			for client in content:
 				if client != '' and client != '\n' and client[0] != '#':
-					client = client.split(' ')
-					
-					if use_hostname == True:
-						hosts.append(client[0])
-					
-					else:
-						hosts.append(client[1])
+					hosts.append(client)
 	
 		else:
 			print(col.red1 + 'The group ' + group + ' does not exist' + col.normal)
@@ -625,21 +635,21 @@ def InventoryList():
 
 
 ## Function to handle file transfers
-def FileOperation(host, user, passwd, source, dest, direction):
+def FileOperation(host, port, user, passwd, source, dest, direction):
 	command = ['sh', '-c']
 	if missing_host_key_accept == True:
 		if direction == 'put':
-			scp_command = ['sshpass -p ' + "'" + passwd + "'" + ' scp -o StrictHostKeyChecking=no -v -p ' + source + ' ' +user + '@' + host + ':' + dest]
+			scp_command = ['sshpass -p ' + "'" + passwd + "'" + ' scp -o StrictHostKeyChecking=no -v -P ' + str(port) + ' -p ' + source + ' ' +user + '@' + host + ':' + dest]
 
 		elif direction == 'get':
-			scp_command = ['sshpass -p ' + "'" + passwd + "'" + ' scp -o StrictHostKeyChecking=no -v -p ' + user + '@' + host + ':' + source + ' ' + dest]
+			scp_command = ['sshpass -p ' + "'" + passwd + "'" + ' scp -o StrictHostKeyChecking=no -v -P ' + str(port) + ' -p ' + user + '@' + host + ':' + source + ' ' + dest]
 
 	else:
 		if direction == 'put':
-			scp_command = ['scp -v -p ' + source + ' ' +user + '@' + host + ':' + dest]
+			scp_command = ['scp -v -P ' + str(port) + ' -p ' + source + ' ' +user + '@' + host + ':' + dest]
 
 		elif direction == 'get':
-			scp_command = ['scp -v -p ' + user + '@' + host + ':' + dest + ' ' + source]
+			scp_command = ['scp -v -P ' + str(port) + ' -p ' + user + '@' + host + ':' + dest + ' ' + source]
 
 	command.extend(scp_command)
 	shell = spur.LocalShell()

@@ -45,7 +45,7 @@ Most information is in this manual. If there is any questions about operation, b
 
 ### Group file and syntax:
 
-Each group file contains one or more clients to build the specific group. The syntax of the group file is simple and as follows. Clientname IP-address Ex:
+Each group file contains one or more clients to build the specific group. The syntax of the group file is simple and as follows. Clientname IP-address Example:
 ~~~
 clab-pc01 192.168.4.10  
 clab-pc02 192.168.4.11  
@@ -53,6 +53,17 @@ clab-pc03 192.168.4.12
 clab-pc04 192.168.4.13  
 clab-pc05 192.168.4.14  
 ~~~
+
+There is also an option for selecting an individual ssh port per client by specifying the port after the IP-address. If no port is specified, it will default to port 22. Example:
+
+~~~
+clab-pc01 192.168.4.10 2222  
+clab-pc02 192.168.4.11  
+clab-pc03 192.168.4.12 202  
+clab-pc04 192.168.4.13 3211  
+clab-pc05 192.168.4.14  
+~~~
+
 Space is the delimiter when reading files and all words in all files are separated by a space and nothing else (like Tab).
 
 The option of exluding a client is supported by putting a ' # ' as the first character of the line.
