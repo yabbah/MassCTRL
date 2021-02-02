@@ -110,8 +110,8 @@ def ClientStatus(group):
 	clients = GetClients(group)
 	ClearScreen()
 	print('')
-	print(format(col.bold_white('Client'), '44'), col.bold_white('Status'))
-	print (col.bold_snow4('-') * 36)
+	print(col.bold_white('Client'), col.move_x(35), col.bold_white('Status'))
+	print (col.bold_snow4('-') * 42)
 
 	for client in clients:
 		client = client.split(' ')
@@ -131,10 +131,10 @@ def ClientStatus(group):
 			client = client[1]
 
 		if CheckClient(client, port) == True:
-			print(format(col.yellow1(client), '52'), col.green2('Online'))
+			print(col.yellow1(client), col.move_x(35), col.green2('Online'))
 
 		else:
-			print(format(col.yellow1(client), '52'), col.blink_red1('Offline'))
+			print(col.yellow1(client), col.move_x(35), col.blink_red1('Offline'))
 	print ('')
 
 
