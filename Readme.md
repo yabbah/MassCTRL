@@ -108,7 +108,7 @@ py MassCTRL.py list
 **status** - Show status on selected group  
 Status is monitoring the specified group continous until stopped. Example:  
 ~~~
-py massCTRL.py group=clab recipe=status  
+py MassCTRL.py group=clab recipe=status  
 ~~~
 
 ### Key file
